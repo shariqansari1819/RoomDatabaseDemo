@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">RoomDatabaseDemo</string>
+
+    <string name="task">Task&#8230;</string>
+    <string name="description">Description&#8230;</string>
+    <string name="finish_by">Finish By&#8230;</string>
+    <string name="add_new_task">Add New Task</string>
+    <string name="update_task">Update Task</string>
+    <string name="finished">Finished</string>
+    <string name="delete">Delete</string>
+    <string name="update">Update</string>
+</resources>
