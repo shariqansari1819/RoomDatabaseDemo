@@ -7,9 +7,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.codebosses.roomdatabasedemo.R;
+import com.codebosses.roomdatabasedemo.databinding.RowDataBinding;
 import com.codebosses.roomdatabasedemo.entity.Task;
 
 import java.util.ArrayList;
@@ -35,15 +37,14 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> {
     @NonNull
     @Override
     public TaskHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new TaskHolder(layoutInflater.inflate(R.layout.row_data, parent, false));
+        RowDataBinding rowDataBinding = DataBindingUtil.inflate(layoutInflater, R.layout.row_data, parent, false);
+        return new TaskHolder(rowDataBinding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull TaskHolder holder, int position) {
         Task task = taskList.get(position);
-        holder.textViewTask.setText(task.getTask());
-        holder.textViewDescription.setText(task.getDescription());
-        holder.textViewFinishBy.setText(task.getFinishBy());
+        holder.rowDataBinding.setTask(task);
         if (task.isFinished()) {
             holder.textViewStatus.setText("Completed");
         } else {
@@ -58,15 +59,13 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> {
 
     class TaskHolder extends RecyclerView.ViewHolder {
 
-        TextView textViewStatus, textViewTask, textViewDescription, textViewFinishBy;
+        TextView textViewStatus;
+        RowDataBinding rowDataBinding;
 
-        public TaskHolder(@NonNull View itemView) {
-            super(itemView);
-
+        public TaskHolder(RowDataBinding rowDataBinding) {
+            super(rowDataBinding.getRoot());
+            this.rowDataBinding = rowDataBinding;
             textViewStatus = itemView.findViewById(R.id.textViewStatus);
-            textViewTask = itemView.findViewById(R.id.textViewTask);
-            textViewDescription = itemView.findViewById(R.id.textViewDesc);
-            textViewFinishBy = itemView.findViewById(R.id.textViewFinishBy);
 
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override

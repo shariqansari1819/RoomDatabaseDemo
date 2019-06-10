@@ -2,6 +2,7 @@ package com.codebosses.roomdatabasedemo;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,6 +21,7 @@ import android.widget.Toast;
 
 import com.codebosses.roomdatabasedemo.adapter.TaskAdapter;
 import com.codebosses.roomdatabasedemo.database.DatabaseClient;
+import com.codebosses.roomdatabasedemo.databinding.ActivityMainBinding;
 import com.codebosses.roomdatabasedemo.entity.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -29,6 +31,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, TaskAdapter.OnItemLongPressed {
 
     //    Android fields....
+    private ActivityMainBinding activityMainBinding;
     private RecyclerView recyclerViewData;
     private FloatingActionButton floatingActionButtonAdd;
     private LayoutInflater layoutInflater;
@@ -43,16 +46,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //    Instance fields....
     private int updatePosition;
     private List<Task> taskList = new ArrayList<>();
+    private ClickHandler clickHandler;
     private Task currentTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
 //        Android fields initialization....
-        recyclerViewData = findViewById(R.id.recyclerViewData);
-        floatingActionButtonAdd = findViewById(R.id.floatingActionButtonAdd);
+        recyclerViewData = activityMainBinding.recyclerViewData;
+        floatingActionButtonAdd = activityMainBinding.floatingActionButtonAdd;
 
 //        Setting layout manager for recycler view....
         recyclerViewData.setLayoutManager(new LinearLayoutManager(this));
@@ -66,15 +70,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         new GetAllDataTask().execute();
 
 //        All event listeners....
-        floatingActionButtonAdd.setOnClickListener(this);
+        clickHandler = new ClickHandler();
+        activityMainBinding.setClickHandler(clickHandler);
+
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.floatingActionButtonAdd:
-                createAddDataDialog();
-                break;
             case R.id.buttonAddTask:
                 String task = editTextAddTask.getText().toString();
                 String description = editTextAddDescription.getText().toString();
@@ -245,5 +248,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             super.onPostExecute(aVoid);
             Toast.makeText(MainActivity.this, "Data updated successfully.", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public class ClickHandler {
+
+        public void onAddClick(View view) {
+            createAddDataDialog();
+        }
+
     }
 }
